@@ -1,7 +1,6 @@
 package speedy;
 
 import org.json.JSONObject;
-
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -9,7 +8,6 @@ import com.mashape.unirest.http.Unirest;
 public class Checker {
 	public static boolean check(String word) {
 		try {
-			
 		HttpResponse<JsonNode> response = Unirest.get("https://montanaflynn-spellcheck.p.mashape.com/check/?text="+word)
 		.header("X-Mashape-Key", "pZfvRi4Qodmshkq5DvbkEGACNLZvp1rwasCjsnEQRySCqOuQn0")
 		.header("Accept", "application/json")
@@ -23,7 +21,5 @@ public class Checker {
 			e.printStackTrace();
 			return(false);
 		}
-	
-	
 	}
 }
