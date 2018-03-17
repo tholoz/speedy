@@ -29,15 +29,16 @@ public class Main {
 	public static AtomicInteger counter = new AtomicInteger(0);
 	public static LinkedBlockingQueue<String> forChecking = new LinkedBlockingQueue<String>();
 	private static LinkedList<Checker> listCheckers = new LinkedList<Checker>();
-	private static boolean bol = true;
+	static boolean notFinished = true;
 	
 	private static void initComponents(Container pane, int checkers) {
 		
 		
 		for (int i=0;i<checkers;i++) {
-			Checker c = new Checker(counter,(BlockingQueue) forChecking, bol);
+			Checker c = new Checker(counter,forChecking, notFinished);
 			listCheckers.add(c);
-		}
+			c.start();
+			}
 		setUpPane(pane);
 		
 		
@@ -49,10 +50,13 @@ public class Main {
 		
 		//Timer
 		JLabel tempsRestant = new JLabel();
-		tempsRestant.setText("100");
-		final Chrono chrono = new Chrono(100, tempsRestant);
+		tempsRestant.setText("30");
+		final Chrono chrono = new Chrono(30, tempsRestant);
 		Panel timer = new Panel();
 		timer.add(tempsRestant);
+		
+		//Counter
+		final JLabel count = new JLabel("0");
 		
 		//Text Area
 		
@@ -66,6 +70,8 @@ public class Main {
 					String toCheck = getTypedString(ecriture.getText());
 					forChecking.add(toCheck);
 				}
+				count.setText(counter.toString());
+				
 			}
 
 			private String getTypedString(String text) {
@@ -112,6 +118,10 @@ public class Main {
 		
 		JButton start = new JButton("Start");
 		JButton selecteur = new JButton("Bouton");
+		
+		
+		JPanel countPanel = new JPanel();
+		countPanel.add(count);
 
 
 		start.addActionListener(new ActionListener() {
@@ -132,21 +142,22 @@ public class Main {
 				.addComponent(ecriture))
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
 						.addComponent(start)
-						.addComponent(selecteur)));
+						.addComponent(countPanel)));
 		layout.setVerticalGroup(layout.createSequentialGroup().addGroup(
 				layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 				.addComponent(timer)
 				.addComponent(start))
 				.addComponent(ecriture)
-				.addComponent(selecteur));
+				.addComponent(countPanel));
 
 	}
 
 	/**
 	 * Create the GUI and show it. For thread safety, this method should be invoked
 	 * from the event-dispatching thread.
+	 * @throws InterruptedException 
 	 */
-	private static void createAndShowGUI() {
+	private static void createAndShowGUI() throws InterruptedException {
 		// Create and set up the window.
 		
 		
@@ -161,14 +172,31 @@ public class Main {
 		// Display the window.
 		frame.pack();
 		frame.setVisible(true);
+		
+//		while (notFinished) {
+//			Thread.sleep(100);
+//		}
+//		frame.setVisible(false);
+//		createAndShowFinish();
 	}
-
+	
+	private static void createAndShowFinish() throws InterruptedException {
+		System.out.println("coucou");
+	}
+	
+	
 	public static void main(String args[]) {
 		// Schedule a job for the event-dispatching thread:
 		// creating and showing this application's GUI.
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				createAndShowGUI();
+				try {
+					createAndShowGUI();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+				
 			}
 		});
 	}

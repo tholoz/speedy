@@ -11,8 +11,7 @@ public class Chrono {
 	
 	Timer t;
 	int iTimeUp;
-	JLabel lCountTime;
-	
+	JLabel lCountTime;	
 	
 	public Chrono(int time, JLabel count) {
 		iTimeUp = time;
@@ -21,7 +20,11 @@ public class Chrono {
 			   public void actionPerformed(ActionEvent e) {
 				  lCountTime.setText(Integer.toString(Chrono.this.iTimeUp)); 
 			      iTimeUp--;
-			      if (iTimeUp==0) t.stop();
+			      if (iTimeUp==0) {
+			    	  t.stop();
+			    	  Main.notFinished = false;
+			    	  
+			      }
 			   } 
 			}); 
 
