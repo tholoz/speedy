@@ -44,8 +44,6 @@ public class Main {
 		
 		
 		
-		
-		
 		//Start Button
 		JPanel buttonPanel = new JPanel();
 		JButton startButton = new JButton();

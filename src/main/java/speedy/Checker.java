@@ -1,12 +1,26 @@
 package speedy;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.json.JSONObject;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 
-public class Checker {
+public class Checker extends Thread{
+	
+	AtomicInteger count;
+	private final BlockingQueue<String> queue;
+	boolean notFinished;
+	
+	public Checker(AtomicInteger count, BlockingQueue<String> queue, boolean notFinished) {
+		this.count = count;
+		this.queue = queue;
+		this.notFinished = notFinished;
+	}
+	
 	public static boolean check(String word) {
 		try {
 			
@@ -23,7 +37,22 @@ public class Checker {
 			e.printStackTrace();
 			return(false);
 		}
+	}
 	
-	
+	public void run(){
+		try {
+			while(notFinished) {
+				String word = queue.take();
+				int length = word.length();
+				if(check(word)) {
+					count.getAndAdd(length);
+				}
+				else {
+					count.getAndAdd(-length);
+				}
+			}
+			
+		}catch(InterruptedException e) {e.printStackTrace();}
+		
 	}
 }
