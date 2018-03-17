@@ -3,10 +3,17 @@ package application;
 /*
  * GridBagLayoutDemo.java requires no other files.
  */
-
-import java.awt.*;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.LinkedList;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -15,17 +22,30 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import speedy.Checker;
+
 public class Main {
-
-	private static void initComponents(Container pane) {
-
-		addComponentsToPane(pane);
+	
+	public static AtomicInteger counter = new AtomicInteger(0);
+	public static LinkedBlockingQueue<String> forChecking = new LinkedBlockingQueue<String>();
+	private static LinkedList<Checker> listCheckers = new LinkedList<Checker>();
+	private static boolean bol = true;
+	
+	private static void initComponents(Container pane, int checkers) {
+		
+		
+		for (int i=0;i<checkers;i++) {
+			Checker c = new Checker(counter,(BlockingQueue) forChecking, bol);
+			listCheckers.add(c);
+		}
+		setUpPane(pane);
+		
+		
 	}
 
-	private static void addComponentsToPane(Container pane) {
+	private static void setUpPane(Container pane) {
 
 
-		
 		
 		//Timer
 		JLabel tempsRestant = new JLabel();
@@ -35,12 +55,45 @@ public class Main {
 		timer.add(tempsRestant);
 		
 		//Text Area
+		
 		final JTextArea ecriture = new JTextArea("Type in as"+
 		"many words as possible, before the count ends.");
 		
-		
+		ecriture.addKeyListener(new KeyListener() {
+			public void keyTyped(KeyEvent e) {
+				char x = e.getKeyChar();
+				if (x == ' ') {
+					String toCheck = getTypedString(ecriture.getText());
+					forChecking.add(toCheck);
+				}
+			}
+
+			private String getTypedString(String text) {
+				String typed = "";
+				int l = text.length();
+				for (int i=0; i<l; i++) {
+					if (text.charAt(l-i-1)!= ' ') {
+						typed = text.charAt(l-i-1)+typed;
+					}
+					else {
+						if (typed != "") {
+							return typed;
+						}
+					}
+				}
+				return typed;
+			}
+
+			public void keyPressed(KeyEvent arg0) {
+			}
+
+			public void keyReleased(KeyEvent arg0) {
+			}
+		});
 		ecriture.setLineWrap(true);
 		ecriture.setWrapStyleWord(true);
+		
+		
 		
 		
 		
@@ -95,12 +148,15 @@ public class Main {
 	 */
 	private static void createAndShowGUI() {
 		// Create and set up the window.
+		
+		
 		JFrame frame = new JFrame("TypeSpeedy");
 		frame.setMinimumSize(new Dimension(400, 400));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// Set up the content pane.
-		initComponents(frame.getContentPane());
+		initComponents(frame.getContentPane(),8);
+		
 
 		// Display the window.
 		frame.pack();
