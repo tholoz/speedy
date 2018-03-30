@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -128,21 +129,6 @@ private static void setUpPane(Container pane) {
 		countPanel.add(count);
 
 
-		
-//		start.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent evt) {
-//				chrono.start();
-//				ecriture.setText("");
-//				try {
-//					chrono.join();
-//					System.out.println("Chrono Terminé");
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-
 		GroupLayout layout = new GroupLayout(pane);
 		pane.setLayout(layout);
 
@@ -189,7 +175,7 @@ private static void setUpPane(Container pane) {
 		frame.setVisible(true);
 	}
 	
-	public static void finish(ConcurrentHashMap<String, Boolean> alreadyUsed, GameModes mode) {
+	public static void finish(ConcurrentHashMap<String, Boolean> alreadyUsed, GameModes mode, BlockingQueue<String> goodWords) {
 		//MAJ du fichier contenant les mots interdits
 		if (mode==GameModes.ADVANCED) {
 			File seen = new File("AlreadyUsed.txt");
@@ -222,12 +208,12 @@ private static void setUpPane(Container pane) {
 		
 		Container pane = frame.getContentPane();
 		
-		//scoreet mots utilisés
+		//scoreet mots utilisÃ©s
 		
 		JLabel mots =new JLabel();
-		String words = "Mots utilisés avec succès :\n";
-		for (String word : alreadyUsed.keySet()) {
-			words += word+"\n";
+		String words = "Mots utilisÃ©s avec succÃ¨s :\n";
+		for (String word : goodWords) {
+			words += word+" ";
 		}
 		mots.setText(words);
 		mots.setHorizontalAlignment(SwingConstants.CENTER);

@@ -32,7 +32,6 @@ public class Chrono extends Thread{
 		
 		synchronized(lock) {
 		try {
-				System.out.println("waiting");
 
 				lock.wait();
 			} catch (InterruptedException e1) {
@@ -41,7 +40,7 @@ public class Chrono extends Thread{
 				e1.printStackTrace();
 			}
 		}
-		System.out.println("Chrono started");
+
 		t.start();
 		
 

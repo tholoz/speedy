@@ -65,26 +65,13 @@ private static void joinCheckers() {
 }
 	
 	public static void main(String args[]) {
-		// Schedule a job for the event-dispatching thread:
-		// creating and showing this application's GUI.
-//		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					createAndShowGUI();
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
-//				
-//				
-//			}
-//		});
 		
 		initCheckers(8);
 		boolean started = false;
 		ReentrantLock lock = new ReentrantLock();		
 		JLabel tempsRestant = new JLabel();
 		tempsRestant.setText("30");
-		final Chrono chrono = new Chrono(15, tempsRestant, started,lock);
+		final Chrono chrono = new Chrono(30, tempsRestant, started,lock);
 		
 		Interface layout = new Interface(started,lock,forChecking,counter,tempsRestant,chrono);
 		layout.start();
@@ -96,8 +83,8 @@ private static void joinCheckers() {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		layout.finish(alreadyUsed, GameModes.ADVANCED);
-		System.out.println("c'est fini frer");
+		layout.finish(alreadyUsed, GameModes.ADVANCED, goodWords);
+
 		
 		
 
